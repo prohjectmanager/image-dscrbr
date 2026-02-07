@@ -1,6 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import ImageUploader from "../islands/ImageUploader.tsx";
-import ResultsTable from "../components/ResultsTable.tsx";
+import ResultsTable from "../islands/ResultsTable.tsx";
 
 export default function Home() {
   const today = new Date().toISOString().split("T")[0];
@@ -12,7 +12,6 @@ export default function Home() {
     <>
       <Head>
         <title>Image Alt Text Generator</title>
-        <script src="/htmx.min.js"></script>
       </Head>
       <div class="min-h-screen bg-gray-50">
         <header class="bg-white shadow-sm">

@@ -117,3 +117,17 @@ export function getResultsByDateRange(
     created_at: row.created_at,
   }));
 }
+
+export function deleteResults(ids: number[]): number {
+  const db = initDb();
+  if (ids.length === 0) return 0;
+
+  // Create placeholders for the IN clause
+  const placeholders = ids.map(() => "?").join(",");
+  const stmt = db.prepare(
+    `DELETE FROM alt_texts WHERE id IN (${placeholders})`,
+  );
+
+  stmt.run(ids);
+  return db.changes;
+}

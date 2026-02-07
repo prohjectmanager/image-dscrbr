@@ -4,13 +4,18 @@ import { encodeBase64 } from "$std/encoding/base64.ts";
 
 const MAX_THUMBNAIL_SIZE = 200;
 
-async function createThumbnail(imageData: Uint8Array, filename: string): Promise<Uint8Array> {
+async function createThumbnail(
+  imageData: Uint8Array,
+  filename: string,
+): Promise<Uint8Array> {
   // Determine file extension from filename
-  const ext = filename.toLowerCase().split('.').pop() || 'jpg';
-  const validExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext) ? ext : 'jpg';
+  const ext = filename.toLowerCase().split(".").pop() || "jpg";
+  const validExt = ["jpg", "jpeg", "png", "gif", "webp"].includes(ext)
+    ? ext
+    : "jpg";
 
   const tempInput = await Deno.makeTempFile({ suffix: `.${validExt}` });
-  const tempOutput = await Deno.makeTempFile({ suffix: '.jpg' });
+  const tempOutput = await Deno.makeTempFile({ suffix: ".jpg" });
 
   try {
     await Deno.writeFile(tempInput, imageData);
@@ -18,11 +23,17 @@ async function createThumbnail(imageData: Uint8Array, filename: string): Promise
     // Use sips (built into macOS) for resizing
     const cmd = new Deno.Command("sips", {
       args: [
-        "-Z", MAX_THUMBNAIL_SIZE.toString(),  // Resize to fit in box, maintaining aspect ratio
-        "--setProperty", "formatOptions", "80",  // JPEG quality
-        "-s", "format", "jpeg",
+        "-Z",
+        MAX_THUMBNAIL_SIZE.toString(), // Resize to fit in box, maintaining aspect ratio
+        "--setProperty",
+        "formatOptions",
+        "80", // JPEG quality
+        "-s",
+        "format",
+        "jpeg",
         tempInput,
-        "--out", tempOutput,
+        "--out",
+        tempOutput,
       ],
       stderr: "piped",
     });
@@ -121,12 +132,20 @@ export const handler: Handlers = {
           continue;
         }
 
-        console.log("[/api/process] Processing:", file.name, `(${(file.size / 1024).toFixed(1)} KB)`);
+        console.log(
+          "[/api/process] Processing:",
+          file.name,
+          `(${(file.size / 1024).toFixed(1)} KB)`,
+        );
 
         const imageData = new Uint8Array(await file.arrayBuffer());
         console.log("[/api/process] Creating thumbnail...");
         const thumbnail = await createThumbnail(imageData, file.name);
-        console.log("[/api/process] Thumbnail size:", (thumbnail.length / 1024).toFixed(1), "KB");
+        console.log(
+          "[/api/process] Thumbnail size:",
+          (thumbnail.length / 1024).toFixed(1),
+          "KB",
+        );
 
         const imageBase64 = encodeBase64(imageData);
         console.log("[/api/process] Sending to Ollama...");
@@ -138,7 +157,11 @@ export const handler: Handlers = {
         results.push(result);
       }
 
-      console.log("[/api/process] Completed processing", results.length, "images");
+      console.log(
+        "[/api/process] Completed processing",
+        results.length,
+        "images",
+      );
       return new Response(
         JSON.stringify({ success: true, count: results.length }),
         { headers: { "Content-Type": "application/json" } },

@@ -19,7 +19,9 @@ export const handler: Handlers = {
 
       if (!from || !to) {
         return new Response(
-          JSON.stringify({ error: "Both 'from' and 'to' date parameters are required" }),
+          JSON.stringify({
+            error: "Both 'from' and 'to' date parameters are required",
+          }),
           { status: 400, headers: { "Content-Type": "application/json" } },
         );
       }
@@ -38,7 +40,13 @@ export const handler: Handlers = {
       console.log("[/api/export] Exporting", results.length, "results");
 
       // Build CSV
-      const headers = ["filename", "alt_text", "char_count", "model", "created_at"];
+      const headers = [
+        "filename",
+        "alt_text",
+        "char_count",
+        "model",
+        "created_at",
+      ];
       const csvRows = [headers.join(",")];
 
       for (const r of results) {

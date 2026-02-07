@@ -4,18 +4,21 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $api_delete from "./routes/api/delete.ts";
 import * as $api_export from "./routes/api/export.ts";
 import * as $api_models from "./routes/api/models.ts";
 import * as $api_process from "./routes/api/process.ts";
 import * as $api_results from "./routes/api/results.ts";
 import * as $index from "./routes/index.tsx";
 import * as $ImageUploader from "./islands/ImageUploader.tsx";
+import * as $ResultsTable from "./islands/ResultsTable.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/api/delete.ts": $api_delete,
     "./routes/api/export.ts": $api_export,
     "./routes/api/models.ts": $api_models,
     "./routes/api/process.ts": $api_process,
@@ -24,6 +27,7 @@ const manifest = {
   },
   islands: {
     "./islands/ImageUploader.tsx": $ImageUploader,
+    "./islands/ResultsTable.tsx": $ResultsTable,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

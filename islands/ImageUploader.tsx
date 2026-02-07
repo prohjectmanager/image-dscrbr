@@ -91,12 +91,8 @@ export default function ImageUploader() {
       }
 
       files.value = [];
-      // Trigger HTMX refresh of results
-      const resultsDiv = document.getElementById("results-table");
-      if (resultsDiv) {
-        // @ts-ignore htmx is loaded globally
-        htmx.trigger(resultsDiv, "refresh");
-      }
+      // Trigger refresh of results
+      globalThis.dispatchEvent(new CustomEvent("refresh-results"));
     } catch (err) {
       error.value = err instanceof Error ? err.message : "Unknown error";
     } finally {
@@ -126,7 +122,8 @@ export default function ImageUploader() {
             >
               {models.value.length === 0
                 ? <option value="">No models available</option>
-                : models.value.map((m) => <option key={m} value={m}>{m}</option>)}
+                : models.value.map((m) => <option key={m} value={m}>{m}
+                </option>)}
             </select>
           )}
       </div>
@@ -236,7 +233,9 @@ export default function ImageUploader() {
               Processing...
             </span>
           )
-          : `Process ${files.value.length || ""} Image${files.value.length !== 1 ? "s" : ""}`}
+          : `Process ${files.value.length || ""} Image${
+            files.value.length !== 1 ? "s" : ""
+          }`}
       </button>
     </div>
   );
